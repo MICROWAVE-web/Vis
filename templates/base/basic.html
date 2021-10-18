@@ -1,0 +1,49 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vis</title>
+    <link rel="stylesheet" href="{% static 'base/css/vis_styles.css' %}" type="text/css">
+    <link rel="shortcut icon" type="image/png" href="{% static "base/icons/logo.svg" %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    {% block js %}
+    {% endblock %}
+</head>
+    <div class="navigation_part">
+        <div class="navigation_box">
+            <div class="navigation_box_header">
+                <div class="logo_block"></div>
+                <div class="logo_title">Vis</div>
+                <div class="logo_subtitle">Better. Faster.</div>
+            </div>
+
+            <div class="items_box">
+                <div class="soc_item" id="Youtube">
+                    <div class="item_inner"> Youtube &emsp;<img class='mini' src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png"></div>
+                </div>
+                <div class="soc_item" id="VK">
+                    <div class="item_inner"> VK &emsp;<img class='mini' src="https://img.icons8.com/color/480/000000/vk-com.png"></div>
+                </div>
+                <div class="soc_item" id="Soundcloud">
+                    <div class="item_inner"> Soundcloud &emsp;<img class='mini' src="https://cdn-icons-png.flaticon.com/512/145/145809.png"></div>
+                </div>
+                <div class="soc_item" id="Facebook">
+                    <div class="item_inner"> Facebook &emsp;<img class='mini' src="https://cdn-icons-png.flaticon.com/512/733/733547.png"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="principal_part">
+        {% block principal_part %}
+        {% endblock %}
+    </div>
+    <div class="extra_dots_part">
+        <div class="status_dot" id="0">•</div>
+        <div class="status_dot" id="1">•</div>
+        <div class="status_dot" id="2">•</div>
+        <div class="status_dot" id="3">•</div>
+    </div>
+</body>
+</html>

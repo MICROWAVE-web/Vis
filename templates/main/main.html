@@ -1,0 +1,32 @@
+{% extends 'base/basic.html' %}
+{% load static %}
+
+{% block principal_part %}
+    <div class="principal_block" id="Youtube">
+        <div class="checking_link">
+            <x-field>
+            <input class='link_input' type="text" placeholder="Введите ссылку">
+            <span class="close_span">
+            &times;
+            </span>
+            </x-field>
+        </div>
+        <div class="browse_link"></div>
+        <div class="info_link">абобус</div>
+    </div>
+    <div class="principal_block_down" id="VK" >
+        VK
+    </div>
+    <div class="principal_block_down" id="Soundcloud" >
+        Soundcloud
+    </div>
+    <div class="principal_block_down" id="Facebook" >
+        Facebook
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript" src={% static "base/js/animation.js" %}></script>
+    <script type="text/javascript" src={% static "base/js/validate.js" %}></script>
+{% endblock %}
