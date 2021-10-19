@@ -5,8 +5,8 @@
     <div class="principal_block" id="Youtube">
         <div class="checking_link">
             <x-field>
-            <input class='link_input' type="text" placeholder="Введите ссылку">
-            <span class="close_span">
+                <input class='link_input' type="text" placeholder="Введите ссылку">
+                <span class="close_span">
             &times;
             </span>
             </x-field>
@@ -14,13 +14,13 @@
         <div class="browse_link"></div>
         <div class="info_link"></div>
     </div>
-    <div class="principal_block_down" id="VK" >
+    <div class="principal_block_down" id="VK">
         VK
     </div>
-    <div class="principal_block_down" id="Soundcloud" >
+    <div class="principal_block_down" id="Soundcloud">
         Soundcloud
     </div>
-    <div class="principal_block_down" id="Facebook" >
+    <div class="principal_block_down" id="Facebook">
         Facebook
     </div>
 
@@ -28,5 +28,45 @@
 
 {% block js %}
     <script type="text/javascript" src={% static "base/js/animation.js" %}></script>
-    <script type="text/javascript" src={% static "base/js/validate.js" %}></script>
+{% endblock %}
+
+{% block js_code %}
+    <script>
+        $(document).ready(function () {
+            $('.link_input').on('input', function () {
+                $('.browse_link').html('<img class="status_gif" src="https://c.tenor.com/I6kN-6X7nhAAAAAi/loading-buffering.gif">')
+                let $this = $(this),
+                    val = $this.val();
+                if (val.length === 0) {
+                    $('.browse_link').html('<img class="status_gif" src="/static/base/icons/await.gif">')
+                    return false
+                }
+                $.ajax({
+                    type: "post",
+                    dataType: 'json',
+                    data: {
+                        'url': val,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    url: '../' + "ajax_validate_url/",
+                    // on success
+                    success: function (response) {
+                        if (response.streams[response.streams.length - 1] === true) {
+                            $('.browse_link').html('<img class="big_status_gif" src="/static/base/icons/ok.gif">')
+                            console.log(response.streams)
+                            $('.info_link').text(response.streams[0][0]['url'])
+                        } else {
+                            $('.browse_link').html('<img class="big_status_gif" src="/static/base/icons/cross.gif">')
+                            $('.info_link').text(response.streams)
+                        }
+
+                    },
+                    error: function (response) {
+                        $('.browse_link').html('<img class="big_status_gif" src="/static/base/icons/cross.gif">')
+                    }
+                });
+                return false;
+            });
+        })
+        </script>
 {% endblock %}

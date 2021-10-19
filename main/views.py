@@ -1,11 +1,15 @@
 import pytube
-import requests
 import validators
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views import View
+from django.views.decorators.http import require_http_methods
 from pytube import YouTube
 from youtube_dl import YoutubeDL
+
+
+class IncorrectLink(Exception):
+    pass
 
 
 class Social:
@@ -22,13 +26,13 @@ class Social:
 class Youtube(Social):
     def __init__(self, url=''):
         super().__init__(url)
-        if validators.url(url):
-            try:
-                self.yt = YouTube(url)
-            except Exception:
-                self.yt = None
-        else:
-            self.yt = None
+        try:
+            assert validators.url(url)
+            self.yt = YouTube(url)
+        except AssertionError:
+            raise IncorrectLink('Некорректный url')
+        except Exception:
+            raise IncorrectLink('Не удалось обработать видео с Ютуб')
 
     def streams(self):
         return [st.__dict__ for st in self.yt.streams.filter(progressive=True)]
@@ -38,9 +42,10 @@ class Youtube(Social):
                                                              progressive=True).order_by(
             'resolution')]
 
-    def audio_streams(self):
-        return [st.__dict__ for st in
-                self.yt.streams.filter(type='audio', mime_type='audio/mp4').order_by('abr')]
+
+def audio_streams(self):
+    return [st.__dict__ for st in
+            self.yt.streams.filter(type='audio', mime_type='audio/mp4').order_by('abr')]
 
 
 class VK(Social):
@@ -136,6 +141,7 @@ SOCIAL_LIST = {
 
 
 def general_streams(url):
+    is_correct = False
     output_streams = []
     for social_key in SOCIAL_LIST.keys():
         for domain in SOCIAL_LIST[social_key][0]:
@@ -143,9 +149,11 @@ def general_streams(url):
                 social_object = SOCIAL_LIST[social_key][-1](url)
                 if social_object:
                     try:
-                        output_streams = social_object.audio_streams()
+                        output_streams = social_object.streams()
+                        is_correct = True
                     except pytube.exceptions.VideoUnavailable:
                         print('video link is unvailuble')
+                        is_correct = False
                     break
 
     serializable_streams = []
@@ -155,22 +163,13 @@ def general_streams(url):
             for key in stream.keys():
                 if isinstance(stream[key], (str, int, float)):
                     serializable_streams[index][key] = stream[key]
-    return serializable_streams
+    return serializable_streams, is_correct
 
 
+@require_http_methods(["POST"])
 def validate_url(request):
-    url = request.GET.get('url').strip().replace(' ', '')
-    is_actual = (False, 'Внутрення ошибка')
-    try:
-        response = requests.head(url)
-        if str(response.status_code)[0] in ['3', '2'] or str(response.status_code) == '418':
-            is_actual = (True, 'Успешно')
-        else:
-            is_actual = (False, 'Не действительна')
-    except Exception as e:
-        is_actual = (False, 'Ошибка соединения')
+    url = request.POST.get('url').strip().replace(' ', '')
     response = {
-        'is_actual': is_actual,
         'streams': general_streams(url),
     }
     return JsonResponse(response, safe=False, json_dumps_params={'ensure_ascii': False})
