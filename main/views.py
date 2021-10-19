@@ -1,3 +1,4 @@
+import pytube
 import requests
 import validators
 from django.http import JsonResponse
@@ -141,7 +142,10 @@ def general_streams(url):
             if domain in url:
                 social_object = SOCIAL_LIST[social_key][-1](url)
                 if social_object:
-                    output_streams = social_object.audio_streams()
+                    try:
+                        output_streams = social_object.audio_streams()
+                    except pytube.exceptions.VideoUnavailable:
+                        print('video link is unvailuble')
                     break
 
     serializable_streams = []

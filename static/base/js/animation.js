@@ -4,11 +4,11 @@ let last_social = 'Youtube'
 
 window.onload = function () {
     animate(last_social);
-    $(".soc_item").on("click", function (element) {
+    $(".soc_item").on("click", function () {
         animate(this.id);
     });
 
-    $('.link_input').bind('keyup', function(e) {
+    $('.link_input').bind('keyup', function() {
         let $this = $(this),
             val = $this.val();
 
@@ -22,7 +22,7 @@ window.onload = function () {
     $('.close_span').on('click', function () {
         this.previousElementSibling.value = ''
         $(this).parent().children('.close_span').css('opacity', '0');
-        $('.browse_link').html('<img class="big_status_gif" src="/static/base/icons/await.gif">')
+        $('.browse_link').html('<img class="status_gif" src="/static/base/icons/await.gif">')
     })
 
 };

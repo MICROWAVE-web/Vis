@@ -184,7 +184,7 @@ x-field .close_span:hover {
 
 .status_gif {
     width: 20px;
-    height: 20px;
+    height: min-content;
 }
 .big_status_gif {
     width: 60px;
