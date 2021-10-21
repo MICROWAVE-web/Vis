@@ -1,5 +1,9 @@
+from datetime import datetime
+
 import pytube
+import requests
 import validators
+from django.http import HttpResponse, HttpResponseNotFound
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views import View
@@ -50,7 +54,7 @@ def audio_streams(self):
 
 class VK(Social):
     def streams(self):
-        output_streams: list
+        output_streams = []
         with YoutubeDL() as ydl:
             info_dict = ydl.extract_info(self.url, download=False)
             for stream in info_dict['formats']:
@@ -67,7 +71,7 @@ class VK(Social):
 
 class SoundCloud(Social):
     def streams(self):
-        output_streams: list
+        output_streams = []
         with YoutubeDL() as ydl:
             info_dict = ydl.extract_info(self.url, download=False)
             for stream in info_dict['formats']:
@@ -78,7 +82,7 @@ class SoundCloud(Social):
 
 class FaceBook(Social):
     def streams(self):
-        output_streams: list
+        output_streams = []
         with YoutubeDL() as ydl:
             info_dict = ydl.extract_info(self.url, download=False)
             if info_dict.get('entries'):
@@ -173,6 +177,25 @@ def validate_url(request):
         'streams': general_streams(url),
     }
     return JsonResponse(response, safe=False, json_dumps_params={'ensure_ascii': False})
+
+
+@require_http_methods(["GET"])
+def waprfile(request, link='', title=None, exp='mp4'):
+    link = "https://r2---sn-jvhnu5g-v8ce.googlevideo.com/videoplayback?expire=1634832344&ei=eDtxYfSxLIy97QT8jYFw&ip=212.74.200.117&id=o-AMFq5TASgzEoX_ekBBh-Bz7bQKz-d3hAbyhAu4YNsOjS&itag=22&source=youtube&requiressl=yes&mh=6i&mm=31%2C29&mn=sn-jvhnu5g-v8ce%2Csn-n8v7znsy&ms=au%2Crdu&mv=m&mvi=2&pcm2cms=yes&pl=19&initcwndbps=1690000&vprv=1&mime=video%2Fmp4&cnr=14&ratebypass=yes&dur=1213.149&lmt=1634662965023467&mt=1634810459&fvip=12&fexp=24001373%2C24007246&beids=9466585&c=ANDROID&txp=5532432&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cvprv%2Cmime%2Ccnr%2Cratebypass%2Cdur%2Clmt&sig=AOq0QJ8wRAIgPD6TaDi8jxu6RVvrSVzniSr3GAo-q6JBcSlKv43ghf8CIB5lusrRZHvIJ5zH48vXCsrfiS-17gPExVvqTviPYcLg&lsparams=mh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpcm2cms%2Cpl%2Cinitcwndbps&lsig=AG3C_xAwRgIhAMOLVQZi6Cv6afdzwGpwHDdX1TYHYp9L_d8Z2jLxWw-NAiEA6CL16UGaWpEed_UpDxV075MKSmqa1kKWb_DVg54O8hQ%3D"
+    try:
+        file_data = requests.get(link)
+        # sending response
+        response = HttpResponse(file_data, content_type='video/mp4')
+        if title is None:
+            response['Content-Disposition'] = f'attachment; filename="video-{datetime.now().strftime("%Y-%m-%d")}.{exp}"'
+        else:
+            response['Content-Disposition'] = f'attachment; filename="video-{title}.{exp}"'
+
+    except IOError:
+        response = HttpResponseNotFound('<h1>File not exist</h1>')
+
+    print('Response has been returned.')
+    return response
 
 
 class Vis(View):

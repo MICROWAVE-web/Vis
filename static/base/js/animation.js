@@ -8,21 +8,28 @@ window.onload = function () {
         animate(this.id);
     });
 
-    $('.link_input').bind('keyup', function() {
+    $('.link_input').bind('keyup', function () {
         let $this = $(this),
             val = $this.val();
 
         if (val.length > 0) {
             $(this).parent().children('.close_span').css('opacity', '1');
         } else if (val.length === 0) {
-           $(this).parent().children('.close_span').css('opacity', '0');
+            $(this).parent().children('.close_span').css('opacity', '0');
         }
     });
 
     $('.close_span').on('click', function () {
-        this.previousElementSibling.value = ''
         $(this).parent().children('.close_span').css('opacity', '0');
         $('.browse_link').html('<img class="status_gif" src="/static/base/icons/await.gif">')
+        this.previousElementSibling.value = ''
+        let $this = $('.link_input'),
+            val = $this.val();
+        if (val.length != 0) {
+            $('.browse_link').html('<img class="status_gif" src="/static/base/icons/await.gif">')
+            $('.status_gif').hide();
+            $('.status_gif').fadeIn(500);
+        }
     })
 
 };
@@ -42,20 +49,21 @@ function animate(chosen_social) {
 }
 
 
-
 function getRandomInt() {
-  min = Math.ceil(0);
-  max = Math.floor(360);
-  return Math.floor(Math.random() * (max - min)) + min; //Максимум не включается, минимум включается
+    min = Math.ceil(0);
+    max = Math.floor(360);
+    return Math.floor(Math.random() * (max - min)) + min; //Максимум не включается, минимум включается
 }
 
 let i = 0, howManyTimes = 9999999;
+
 function f() {
     i++;
-    if( i < howManyTimes ){
-        setTimeout( f, 5000 );
+    if (i < howManyTimes) {
+        setTimeout(f, 5000);
     }
 }
+
 f();
 
 

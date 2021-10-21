@@ -122,7 +122,10 @@ html, body {
     width: 600px;
     height: 600px;
     margin: 0 auto;
+    padding: 20px;
+    -webkit-transition: 500ms;
     transition: 500ms;
+    -webkit-transition-property: all;
     transition-property: all;
 }
 
@@ -136,7 +139,8 @@ html, body {
     width: 600px;
     height: 600px;
     margin: 0 auto;
-    transition: 500ms;
+    padding: 20px;
+     -webkit-transition: 500ms;
 
 }
 
@@ -149,8 +153,9 @@ html, body {
     width: 800px;
     height: 800px;
     margin: 0 auto;
-    transition: 500ms;
-    transition-property: all;
+    padding: 20px;
+     -webkit-transition: 500ms;
+     -webkit-transition-property: all;
 }
 .checking_link {
     padding: 20px;
@@ -178,7 +183,6 @@ x-field{
 x-field .close_span {
     vertical-align: center;
     transition: 500ms;
-    position: absolute;
     padding: 0 5px;
     font-size: 35px;
     right: -35px;
@@ -191,20 +195,38 @@ x-field .close_span:hover {
 
 .status_gif {
     width: 20px;
-    height: min-content;
+    height: auto;
 }
 .big_status_gif {
     width: 60px;
-    height: min-content;
+    height: auto;
     filter: invert(100%);
 }
 .browse_link {
     padding: 30px;
     min-height: 120px;
+    max-height: 120px;
     display: flex;
     justify-content: center;
 }
 
+#current_video_streams {
+    border-radius: 10px;
+    border: 1px white;
+}
+
+.info_link {
+    display: flex;
+    flex-direction: row;
+}
+.info_link_data {
+    padding: 20px;
+    display: inline-grid;
+}
+.data_item_title {
+    display: flex;
+    flex-direction: row;
+}
 /* точечки */
 .extra_dots_part {
     width: 5%;

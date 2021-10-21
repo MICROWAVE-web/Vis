@@ -5,14 +5,38 @@
     <div class="principal_block" id="Youtube">
         <div class="checking_link">
             <x-field>
-                <input class='link_input' type="text" placeholder="Введите ссылку">
+                <input class='link_input' type="text" placeholder="Введите ссылку" value="https://youtu.be/KY81Sg1B8J4">
                 <span class="close_span">
             &times;
             </span>
             </x-field>
         </div>
         <div class="browse_link"></div>
-        <div class="info_link"></div>
+        <div class="info_link">
+            <video id='current_video_streams' autoplay="autoplay" width="400" height="300"
+                   controls="controls" poster="video/duel.jpg">
+                <source src="" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
+                Тег video не поддерживается вашим браузером.
+            </video>
+            <div class="info_link_data">
+                <div class="data_item_title">Разрешение —
+                    <div class="data_item" id="resolution"></div>
+                </div>
+                <div class="data_item_title">Видео-кодек —
+                    <div class="data_item" id="video_codec"></div>
+                </div>
+                <div class="data_item_title">Аудио-кодек —
+                    <div class="data_item" id="audio_codec"></div>
+                </div>
+                <div class="data_item_title">Битрейт —
+                    <div class="data_item" id="abr"></div>
+                </div>
+                <!-- <div class="data_item_title">Размер — <div class="data_item" id="filesize"> </div></div> -->
+            </div>
+            <div class="download_links">
+
+            </div>
+        </div>
     </div>
     <div class="principal_block_down" id="VK">
         VK
@@ -32,13 +56,18 @@
 
 {% block js_code %}
     <script>
-        $(document).ready(function () {
+        $(document).ready(function (urll, title) {
+            $('.browse_link').html('<img class="status_gif" src="/static/base/icons/await.gif">')
             $('.link_input').on('input', function () {
-                $('.browse_link').html('<img class="status_gif" src="https://c.tenor.com/I6kN-6X7nhAAAAAi/loading-buffering.gif">')
+                $('.browse_link').html('<img class="status_gif" src="https://c.tenor.com/I6kN-6X7nhAAAAAi/loading-buffering.gif">');
+                $('.status_gif').hide();
+                $('.status_gif').fadeIn(500);
                 let $this = $(this),
                     val = $this.val();
                 if (val.length === 0) {
                     $('.browse_link').html('<img class="status_gif" src="/static/base/icons/await.gif">')
+                    $('.status_gif').hide();
+                    $('.status_gif').fadeIn(500);
                     return false
                 }
                 $.ajax({
@@ -52,21 +81,38 @@
                     // on success
                     success: function (response) {
                         if (response.streams[response.streams.length - 1] === true) {
+                            let streams = response.streams[0];
                             $('.browse_link').html('<img class="big_status_gif" src="/static/base/icons/ok.gif">')
+                            let bsg = $('.big_status_gif')
+                            let ild = $('.info_link_data')
+                            bsg.hide();
+                            bsg.fadeIn(500);
                             console.log(response.streams)
-                            $('.info_link').text(response.streams[0][0]['url'])
+                            $('#current_video_streams').attr('src', response.streams[0][response.streams[0].length - 1]['url']);
+                            ild.find('#resolution').html('&nbsp' + response.streams[0][response.streams[0].length - 1]['resolution']);
+                            ild.find('#video_codec').html('&nbsp' + response.streams[0][response.streams[0].length - 1]['video_codec']);
+                            ild.find('#audio_codec').html('&nbsp' + response.streams[0][response.streams[0].length - 1]['audio_codec']);
+                            ild.find('#abr').html('&nbsp' + response.streams[0][response.streams[0].length - 1]['abr']);
+
+                            streams.forEach(function (entry) {
+                                $(".download_links").append('<div class="download_block"><a class="download_link" href="' + entry['url'] + '" download="file.mp3">Скачать</a></div>');
+                            });
                         } else {
                             $('.browse_link').html('<img class="big_status_gif" src="/static/base/icons/cross.gif">')
+                            $('.big_status_gif').hide();
+                            $('.big_status_gif').fadeIn(500);
                             $('.info_link').text(response.streams)
                         }
 
                     },
                     error: function (response) {
                         $('.browse_link').html('<img class="big_status_gif" src="/static/base/icons/cross.gif">')
+                        $('.big_status_gif').hide();
+                        $('.big_status_gif').fadeIn(500);
                     }
                 });
                 return false;
             });
         })
-        </script>
+    </script>
 {% endblock %}
