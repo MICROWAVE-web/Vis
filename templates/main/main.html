@@ -95,7 +95,7 @@
                             ild.find('#abr').html('&nbsp' + response.streams[0][response.streams[0].length - 1]['abr']);
 
                             streams.forEach(function (entry) {
-                                $(".download_links").append('<div class="download_block"><a class="download_link" href="' + entry['url'] + '" download="file.mp3">Скачать</a></div>');
+                                $(".download_links").append('<div class="download_block"><a class="download_link" href="' + {% url 'download' %} + '?link=' + entry['url'] + '">Скачать</a></div>');
                             });
                         } else {
                             $('.browse_link').html('<img class="big_status_gif" src="/static/base/icons/cross.gif">')
