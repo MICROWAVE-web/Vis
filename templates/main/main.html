@@ -5,7 +5,8 @@
     <div class="principal_block" id="Youtube">
         <div class="checking_link">
             <x-field>
-                <input class='link_input' type="text" placeholder="Введите ссылку" value="https://youtu.be/KY81Sg1B8J4">
+                <input class='link_input' type="text" placeholder="Введите ссылку"
+                       value="https://youtu.be/2kJBJYEJPVg">
                 <span class="close_span">
             &times;
             </span>
@@ -95,7 +96,7 @@
                             ild.find('#abr').html('&nbsp' + response.streams[0][response.streams[0].length - 1]['abr']);
 
                             streams.forEach(function (entry) {
-                                $(".download_links").append('<div class="download_block"><a class="download_link" href="' + {% url 'download' %} + '?link=' + entry['url'] + '">Скачать</a></div>');
+                                $(".download_links").append('<div class="download_block"><a class="download_link" href="' + {% url 'download' %} +'?exp=' + entry['subtype'] + '&link=' + entry['url'].replaceAll('&', 'mozzarella') + '">Скачать</a></div>');
                             });
                         } else {
                             $('.browse_link').html('<img class="big_status_gif" src="/static/base/icons/cross.gif">')

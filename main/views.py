@@ -3,7 +3,8 @@ from datetime import datetime
 import pytube
 import requests
 import validators
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, StreamingHttpResponse, \
+    HttpResponseRedirect
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views import View
@@ -39,17 +40,12 @@ class Youtube(Social):
             raise IncorrectLink('Не удалось обработать видео с Ютуб')
 
     def streams(self):
-        return [st.__dict__ for st in self.yt.streams.filter(progressive=True)]
-
-    def video_streams(self):
-        return [st.__dict__ for st in self.yt.streams.filter(type='video', mime_type='video/mp4',
-                                                             progressive=True).order_by(
+        return [st.__dict__ for st in self.yt.streams.filter(subtype='mp4', progressive=True).order_by(
             'resolution')]
 
-
-def audio_streams(self):
-    return [st.__dict__ for st in
-            self.yt.streams.filter(type='audio', mime_type='audio/mp4').order_by('abr')]
+    def audio_streams(self):
+        return [st.__dict__ for st in
+                self.yt.streams.filter(type='audio', mime_type='audio/mp4').order_by('abr')]
 
 
 class VK(Social):
@@ -180,22 +176,35 @@ def validate_url(request):
 
 
 @require_http_methods(["GET"])
-def waprfile(request, link='', title=None, exp='mp4'):
-    link = "https://r2---sn-jvhnu5g-v8ce.googlevideo.com/videoplayback?expire=1634832344&ei=eDtxYfSxLIy97QT8jYFw&ip=212.74.200.117&id=o-AMFq5TASgzEoX_ekBBh-Bz7bQKz-d3hAbyhAu4YNsOjS&itag=22&source=youtube&requiressl=yes&mh=6i&mm=31%2C29&mn=sn-jvhnu5g-v8ce%2Csn-n8v7znsy&ms=au%2Crdu&mv=m&mvi=2&pcm2cms=yes&pl=19&initcwndbps=1690000&vprv=1&mime=video%2Fmp4&cnr=14&ratebypass=yes&dur=1213.149&lmt=1634662965023467&mt=1634810459&fvip=12&fexp=24001373%2C24007246&beids=9466585&c=ANDROID&txp=5532432&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cvprv%2Cmime%2Ccnr%2Cratebypass%2Cdur%2Clmt&sig=AOq0QJ8wRAIgPD6TaDi8jxu6RVvrSVzniSr3GAo-q6JBcSlKv43ghf8CIB5lusrRZHvIJ5zH48vXCsrfiS-17gPExVvqTviPYcLg&lsparams=mh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpcm2cms%2Cpl%2Cinitcwndbps&lsig=AG3C_xAwRgIhAMOLVQZi6Cv6afdzwGpwHDdX1TYHYp9L_d8Z2jLxWw-NAiEA6CL16UGaWpEed_UpDxV075MKSmqa1kKWb_DVg54O8hQ%3D"
+def waprfile(request):
+    link = request.GET.get('link').replace('mozzarella', '&')
+    title = request.GET.get('title')
+    exp = request.GET.get('exp')
     try:
-        file_data = requests.get(link)
-        # sending response
-        response = HttpResponse(file_data, content_type='video/mp4')
+        assert link, 'Не хватает входных данных (link)'
+        assert exp in ['mp3', 'mp4', '3gpp'], 'Не хватает входных данных (exp)'
+        print('Получение данных...')
+        import urllib.request
+        response = urllib.request.urlopen(link)
+        file_data = response.read()
+        print('Данные получены.')
+        if exp == 'mp4':
+            response = HttpResponse(file_data, content_type='video/mp4')
+        elif exp == 'mp3' or '3gpp':
+            response = HttpResponse(file_data, content_type="video/3gpp")
+        else:
+            response = HttpResponse(file_data)
         if title is None:
-            response['Content-Disposition'] = f'attachment; filename="video-{datetime.now().strftime("%Y-%m-%d")}.{exp}"'
+            response[
+                'Content-Disposition'] = f'attachment; filename="video-{datetime.now().strftime("%Y-%m-%d")}.{exp}"'
         else:
             response['Content-Disposition'] = f'attachment; filename="video-{title}.{exp}"'
+        return response
 
+    except AssertionError as err:
+        return HttpResponseNotFound(f'<h1>Not enough entry data</h1>')
     except IOError:
-        response = HttpResponseNotFound('<h1>File not exist</h1>')
-
-    print('Response has been returned.')
-    return response
+        return HttpResponseNotFound('<h1>File not exist</h1>')
 
 
 class Vis(View):
