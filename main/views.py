@@ -1,10 +1,10 @@
+import time
+import urllib.request
 from datetime import datetime
 
 import pytube
-import requests
 import validators
-from django.http import HttpResponse, HttpResponseNotFound, StreamingHttpResponse, \
-    HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseNotFound
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views import View
@@ -40,8 +40,9 @@ class Youtube(Social):
             raise IncorrectLink('Не удалось обработать видео с Ютуб')
 
     def streams(self):
-        return [st.__dict__ for st in self.yt.streams.filter(subtype='mp4', progressive=True).order_by(
-            'resolution')]
+        return [st.__dict__ for st in
+                self.yt.streams.filter(subtype='mp4', progressive=True).order_by(
+                    'resolution')]
 
     def audio_streams(self):
         return [st.__dict__ for st in
@@ -163,6 +164,7 @@ def general_streams(url):
             for key in stream.keys():
                 if isinstance(stream[key], (str, int, float)):
                     serializable_streams[index][key] = stream[key]
+            serializable_streams[index]['filesize'] = urllib.request.urlopen(stream['url']).headers['Content-Length']
     return serializable_streams, is_correct
 
 
@@ -184,9 +186,11 @@ def waprfile(request):
         assert link, 'Не хватает входных данных (link)'
         assert exp in ['mp3', 'mp4', '3gpp'], 'Не хватает входных данных (exp)'
         print('Получение данных...')
-        import urllib.request
-        response = urllib.request.urlopen(link)
-        file_data = response.read()
+
+        data_request = urllib.request.urlopen(link)
+        file_data = data_request.read()
+        meta = data_request.info()
+        print(meta)
         print('Данные получены.')
         if exp == 'mp4':
             response = HttpResponse(file_data, content_type='video/mp4')

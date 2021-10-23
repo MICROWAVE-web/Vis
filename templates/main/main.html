@@ -6,13 +6,39 @@
         <div class="checking_link">
             <x-field>
                 <input class='link_input' type="text" placeholder="Введите ссылку"
-                       value="https://youtu.be/2kJBJYEJPVg">
+                       value="https://youtu.be/h8YOaGjLJQQ">
                 <span class="close_span">
             &times;
             </span>
             </x-field>
         </div>
         <div class="browse_link"></div>
+        <div class="download_links">
+            <div class="download_objects_button">
+                <div class="download_objects_button_inner download_objects_button_info">Классное видео</div>
+                <div class="download_links_separator"></div>
+                <div class="download_objects_button_inner download_objects_button_icon">В)</div>
+                <div class="download_links_separator"></div>
+                <div class="download_objects_button_inner download_objects_button_a">Сохранить</div>
+            </div>
+
+            <div class="download_objects_button">
+                <div class="download_objects_button_inner download_objects_button_info">Классное видео</div>
+                <div class="download_links_separator"></div>
+                <div class="download_objects_button_inner download_objects_button_icon">В)</div>
+                <div class="download_links_separator"></div>
+                <div class="download_objects_button_inner download_objects_button_a">Сохранить</div>
+            </div>
+
+            <div class="download_objects_button">
+                <div class="download_objects_button_inner download_objects_button_info">Классное видео</div>
+                <div class="download_links_separator"></div>
+                <div class="download_objects_button_inner download_objects_button_icon">В)</div>
+                <div class="download_links_separator"></div>
+                <div class="download_objects_button_inner download_objects_button_a">Сохранить</div>
+            </div>
+
+        </div>
         <div class="info_link">
             <video id='current_video_streams' autoplay="autoplay" width="400" height="300"
                    controls="controls" poster="video/duel.jpg">
@@ -32,10 +58,9 @@
                 <div class="data_item_title">Битрейт —
                     <div class="data_item" id="abr"></div>
                 </div>
-                <!-- <div class="data_item_title">Размер — <div class="data_item" id="filesize"> </div></div> -->
-            </div>
-            <div class="download_links">
-
+                <div class="data_item_title">Размер —
+                    <div class="data_item" id="filesize"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -58,6 +83,19 @@
 {% block js_code %}
     <script>
         $(document).ready(function (urll, title) {
+
+            function formatBytes(bytes, decimals = 2) {
+                if (bytes === 0) return '0 Байт';
+
+                const k = 1024;
+                const dm = decimals < 0 ? 0 : decimals;
+                const sizes = ['Байт', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+            }
+
             $('.browse_link').html('<img class="status_gif" src="/static/base/icons/await.gif">')
             $('.link_input').on('input', function () {
                 $('.browse_link').html('<img class="status_gif" src="https://c.tenor.com/I6kN-6X7nhAAAAAi/loading-buffering.gif">');
@@ -94,9 +132,20 @@
                             ild.find('#video_codec').html('&nbsp' + response.streams[0][response.streams[0].length - 1]['video_codec']);
                             ild.find('#audio_codec').html('&nbsp' + response.streams[0][response.streams[0].length - 1]['audio_codec']);
                             ild.find('#abr').html('&nbsp' + response.streams[0][response.streams[0].length - 1]['abr']);
+                            ild.find('#filesize').html('&nbsp' + formatBytes(response.streams[0][response.streams[0].length - 1]['filesize']));
 
                             streams.forEach(function (entry) {
-                                $(".download_links").append('<div class="download_block"><a class="download_link" href="' + {% url 'download' %} +'?exp=' + entry['subtype'] + '&link=' + entry['url'].replaceAll('&', 'mozzarella') + '">Скачать</a></div>');
+                                $('.download_links').append(`
+                                <div class="download_objects_button">
+                                    <div class="download_objects_button_inner download_objects_button_info">Классное видео</div>
+                                    <div class="download_links_separator"></div>
+                                    <div class="download_objects_button_inner download_objects_button_icon">В)</div>
+                                    <div class="download_links_separator"></div>
+                                    <div class="download_objects_button_inner download_objects_button_a"><a class="download_link" href="` + {% url 'download' %} + '?exp=' + entry['subtype'] + '&link=' + entry['url'].replaceAll('&', 'mozzarella') + `">Скачать</a></div>
+                                </div>
+                                `)
+
+                                $(".download_links").append('<div class="download_block"></div>');
                             });
                         } else {
                             $('.browse_link').html('<img class="big_status_gif" src="/static/base/icons/cross.gif">')
