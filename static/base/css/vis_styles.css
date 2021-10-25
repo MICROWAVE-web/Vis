@@ -43,6 +43,7 @@ html *::-webkit-scrollbar {
 
 *::-webkit-scrollbar-track,
 html *::-webkit-scrollbar-track {
+    border-radius: 10px;
     background: rgba(0, 0, 0, 0.2);
 }
 
@@ -297,7 +298,7 @@ x-field .close_span:hover {
     border-radius: 10px;
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: end;
     align-content: center;
     align-items: center;
     margin-top: 20px;
@@ -313,7 +314,12 @@ x-field .close_span:hover {
     width: 0.1px;
     background-color: white;
 }
-
+.pointers_block {
+    cursor: pointer;
+}
+.block_with_central_text {
+    margin: 0 auto;
+}
 /* точечки */
 .extra_dots_part {
     width: 5%;

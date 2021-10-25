@@ -35,16 +35,18 @@ window.onload = function () {
 };
 
 function animate(chosen_social) {
-    $('.extra_dots_part').children('#' + socials.indexOf(last_social)).css('color', 'white')
-    $('.extra_dots_part').children('#' + socials.indexOf(chosen_social)).css('color', 'black')
-    $('.principal_part').children('#' + last_social).removeClass();
+    let dots = $('.extra_dots_part')
+    let prin = $('.principal_part')
+    dots.children('#' + socials.indexOf(last_social)).css('color', 'white')
+    dots.children('#' + socials.indexOf(chosen_social)).css('color', 'black')
+    prin.children('#' + last_social).removeClass();
     if (socials.indexOf(chosen_social) > socials.indexOf(last_social)) {
         $('.principal_part').children('#' + last_social).addClass("principal_block_up");
     } else if (socials.indexOf(chosen_social) < socials.indexOf(last_social)) {
         $('.principal_part').children('#' + last_social).addClass("principal_block_down");
     }
-    $('.principal_part').children('#' + chosen_social).removeClass();
-    $('.principal_part').children('#' + chosen_social).addClass("principal_block");
+    prin.children('#' + chosen_social).removeClass();
+    prin.children('#' + chosen_social).addClass("principal_block");
     last_social = chosen_social
 }
 

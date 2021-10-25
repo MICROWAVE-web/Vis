@@ -15,27 +15,51 @@
         <div class="browse_link"></div>
         <div class="download_links">
             <div class="download_objects_button">
-                <div class="download_objects_button_inner download_objects_button_info">Классное видео</div>
+                <div class="download_objects_button_inner download_objects_button_info block_with_central_text">
+                    Классное видео
+                </div>
                 <div class="download_links_separator"></div>
                 <div class="download_objects_button_inner download_objects_button_icon">В)</div>
                 <div class="download_links_separator"></div>
-                <div class="download_objects_button_inner download_objects_button_a">Сохранить</div>
+                <div class="download_objects_button_inner download_objects_button_icon pointers_block">
+                    Предпросмотр
+                </div>
+                <div class="download_links_separator"></div>
+                <div class="download_objects_button_inner download_objects_button_a pointers_block">
+                    Сохранить
+                </div>
             </div>
 
             <div class="download_objects_button">
-                <div class="download_objects_button_inner download_objects_button_info">Классное видео</div>
+                <div class="download_objects_button_inner download_objects_button_info block_with_central_text">
+                    Классное видео
+                </div>
                 <div class="download_links_separator"></div>
                 <div class="download_objects_button_inner download_objects_button_icon">В)</div>
                 <div class="download_links_separator"></div>
-                <div class="download_objects_button_inner download_objects_button_a">Сохранить</div>
+                <div class="download_objects_button_inner download_objects_button_icon pointers_block">
+                    Предпросмотр
+                </div>
+                <div class="download_links_separator"></div>
+                <div class="download_objects_button_inner download_objects_button_a pointers_block">
+                    Сохранить
+                </div>
             </div>
 
             <div class="download_objects_button">
-                <div class="download_objects_button_inner download_objects_button_info">Классное видео</div>
+                <div class="download_objects_button_inner download_objects_button_info block_with_central_text">
+                    Классное видео
+                </div>
                 <div class="download_links_separator"></div>
                 <div class="download_objects_button_inner download_objects_button_icon">В)</div>
                 <div class="download_links_separator"></div>
-                <div class="download_objects_button_inner download_objects_button_a">Сохранить</div>
+                <div class="download_objects_button_inner download_objects_button_icon pointers_block">
+                    Предпросмотр
+                </div>
+                <div class="download_links_separator"></div>
+                <div class="download_objects_button_inner download_objects_button_a pointers_block">
+                    Сохранить
+                </div>
             </div>
 
         </div>
@@ -84,6 +108,22 @@
     <script>
         $(document).ready(function (urll, title) {
 
+            $('.download_links').on('click', '.preview_button', function () {
+                showPreview(all_streams.catalog[this.id]);
+            })
+
+            function showPreview(current_stream) {
+                let ild = $('.info_link_data')
+                let video_block = $('#current_video_streams')
+                video_block.attr('src', current_stream['url']);
+                document.getElementsByTagName('video')[0].volume = 0.2;
+                ild.find('#resolution').html('&nbsp' + current_stream['resolution']);
+                ild.find('#video_codec').html('&nbsp' + current_stream['video_codec']);
+                ild.find('#audio_codec').html('&nbsp' + current_stream['audio_codec']);
+                ild.find('#abr').html('&nbsp' + current_stream['abr']);
+                ild.find('#filesize').html('&nbsp' + formatBytes(current_stream['filesize']));
+            }
+
             function formatBytes(bytes, decimals = 2) {
                 if (bytes === 0) return '0 Байт';
 
@@ -121,27 +161,25 @@
                     success: function (response) {
                         if (response.streams[response.streams.length - 1] === true) {
                             let streams = response.streams[0];
-                            $('.browse_link').html('<img class="big_status_gif" src="/static/base/icons/ok.gif">')
-                            let bsg = $('.big_status_gif')
-                            let ild = $('.info_link_data')
+                            $('.browse_link').html('<img class="big_status_gif" src="/static/base/icons/ok.gif">');
+                            let bsg = $('.big_status_gif');
                             bsg.hide();
                             bsg.fadeIn(500);
-                            console.log(response.streams)
-                            $('#current_video_streams').attr('src', response.streams[0][response.streams[0].length - 1]['url']);
-                            ild.find('#resolution').html('&nbsp' + response.streams[0][response.streams[0].length - 1]['resolution']);
-                            ild.find('#video_codec').html('&nbsp' + response.streams[0][response.streams[0].length - 1]['video_codec']);
-                            ild.find('#audio_codec').html('&nbsp' + response.streams[0][response.streams[0].length - 1]['audio_codec']);
-                            ild.find('#abr').html('&nbsp' + response.streams[0][response.streams[0].length - 1]['abr']);
-                            ild.find('#filesize').html('&nbsp' + formatBytes(response.streams[0][response.streams[0].length - 1]['filesize']));
-
-                            streams.forEach(function (entry) {
+                            window.all_streams = {
+                              catalog: response.streams[0]
+                            };
+                            console.log(all_streams.catalog);
+                            showPreview(all_streams.catalog[response.streams[0].length - 1])
+                            streams.forEach(function (entry, indexx) {
                                 $('.download_links').append(`
                                 <div class="download_objects_button">
-                                    <div class="download_objects_button_inner download_objects_button_info">Классное видео</div>
+                                    <div class="download_objects_button_inner download_objects_button_info block_with_central_text">Классное видео</div>
                                     <div class="download_links_separator"></div>
                                     <div class="download_objects_button_inner download_objects_button_icon">В)</div>
                                     <div class="download_links_separator"></div>
-                                    <div class="download_objects_button_inner download_objects_button_a"><a class="download_link" href="` + {% url 'download' %} + '?exp=' + entry['subtype'] + '&link=' + entry['url'].replaceAll('&', 'mozzarella') + `">Скачать</a></div>
+                                    <div class="download_objects_button_inner download_objects_button_icon pointers_block preview_button" id='` + indexx + `'>Предпросмотр</div>
+                                    <div class="download_links_separator"></div>
+                                    <div class="download_objects_button_inner download_objects_button_a pointers_block"'><a class="download_link" href="` + {% url 'download' %} +'?exp=' + entry['subtype'] + '&link=' + entry['url'].replaceAll('&', 'mozzarella') + `">Скачать</a></div>
                                 </div>
                                 `)
 
