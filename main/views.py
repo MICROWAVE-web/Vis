@@ -1,4 +1,3 @@
-import time
 import urllib.request
 from datetime import datetime
 
@@ -164,7 +163,8 @@ def general_streams(url):
             for key in stream.keys():
                 if isinstance(stream[key], (str, int, float)):
                     serializable_streams[index][key] = stream[key]
-            serializable_streams[index]['filesize'] = urllib.request.urlopen(stream['url']).headers['Content-Length']
+            serializable_streams[index]['filesize'] = urllib.request.urlopen(stream['url']).headers[
+                'Content-Length']
     return serializable_streams, is_correct
 
 
@@ -175,40 +175,6 @@ def validate_url(request):
         'streams': general_streams(url),
     }
     return JsonResponse(response, safe=False, json_dumps_params={'ensure_ascii': False})
-
-
-@require_http_methods(["GET"])
-def waprfile(request):
-    link = request.GET.get('link').replace('mozzarella', '&')
-    title = request.GET.get('title')
-    exp = request.GET.get('exp')
-    try:
-        assert link, 'Не хватает входных данных (link)'
-        assert exp in ['mp3', 'mp4', '3gpp'], 'Не хватает входных данных (exp)'
-        print('Получение данных...')
-
-        data_request = urllib.request.urlopen(link)
-        file_data = data_request.read()
-        meta = data_request.info()
-        print(meta)
-        print('Данные получены.')
-        if exp == 'mp4':
-            response = HttpResponse(file_data, content_type='video/mp4')
-        elif exp == 'mp3' or '3gpp':
-            response = HttpResponse(file_data, content_type="video/3gpp")
-        else:
-            response = HttpResponse(file_data)
-        if title is None:
-            response[
-                'Content-Disposition'] = f'attachment; filename="video-{datetime.now().strftime("%Y-%m-%d")}.{exp}"'
-        else:
-            response['Content-Disposition'] = f'attachment; filename="video-{title}.{exp}"'
-        return response
-
-    except AssertionError as err:
-        return HttpResponseNotFound(f'<h1>Not enough entry data</h1>')
-    except IOError:
-        return HttpResponseNotFound('<h1>File not exist</h1>')
 
 
 class Vis(View):

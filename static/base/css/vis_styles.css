@@ -10,7 +10,7 @@ html, body {
     display: flex;
     flex-direction: row;
     transition: 3s;
-    background: conic-gradient(from 0.25turn at 50% 30%, #c00855, 10deg, #248dc0, 350deg, #eaffcc);
+    background: conic-gradient(from 0.25turn at 50% 30%, #ce0c46, 10deg, #ffedb5, 350deg, #386895);
     /*background: rgb(23, 180, 255);
     background: linear-gradient(160deg, rgba(23, 180, 255, 1) 0%, rgba(144, 7, 136, 1) 100%, rgba(0, 212, 255, 1) 100%); */
     color: white;
@@ -33,6 +33,11 @@ html, body {
 
 html {
   scroll-behavior: smooth;
+}
+
+a {
+text-decoration: none !important;
+border: none !important;
 }
 
 *::-webkit-scrollbar,
@@ -77,6 +82,8 @@ html *::-webkit-scrollbar-thumb {
     align-items: center;
     width: auto;
     background-color: rgb(37, 42, 42);
+    border-top: 2px solid rgba(0, 0, 0, 0.2);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
 }
@@ -86,7 +93,11 @@ html *::-webkit-scrollbar-thumb {
     width: 70px;
     background: url(../icons/logo.svg) no-repeat;
 }
-
+.row_direction {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
 .logo_title {
     font-size: 30px;
     font-weight: 600;
@@ -112,6 +123,8 @@ html *::-webkit-scrollbar-thumb {
     margin: 15px;
     font-size: 15px;
     background-color: rgba(33, 35, 35, 0.5);
+    border-top: 2px solid rgba(33, 35, 35, 0.2);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
     border-radius: 10px;
     filter: grayscale(1);
 }
@@ -153,6 +166,8 @@ html *::-webkit-scrollbar-thumb {
     flex-direction: column;
     position: absolute;
     background-color: rgba(33, 35, 35, 0.5);
+    border-top: 2px solid rgba(33, 35, 35, 0.2);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
     border-radius: 10px;
     width: 600px;
     height: 600px;
@@ -169,6 +184,8 @@ html *::-webkit-scrollbar-thumb {
     flex-direction: column;
     position: absolute;
     background-color: rgba(33, 35, 35, 0.5);
+    border-top: 2px solid rgba(33, 35, 35, 0.2);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
     border-radius: 10px;
     width: 600px;
     height: 600px;
@@ -182,6 +199,8 @@ html *::-webkit-scrollbar-thumb {
     display: flex;
     flex-direction: column;
     position: absolute;
+    border-top: 2px solid rgba(33, 35, 35, 0.2);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
     background-color: rgba(33, 35, 35, 0.5);
     border-radius: 10px;
     width: 800px;
@@ -203,21 +222,31 @@ html *::-webkit-scrollbar-thumb {
     font-size: 18px;
     border-radius: 10px;
     text-align: left;
-    border: 2px solid royalblue;
+    border: 1px solid #386895;
     padding: 10px;
-    background-color: rgb(37, 42, 42);
+    background-color: rgb(47, 42, 42);
     transition: 500ms;
+    outline: none;
 }
-
 .link_input:focus {
-    border: 2px solid deeppink;
+    border: 1px solid #CE0C46FF;
 }
-
+*, a:focus {
+    outline: none !important;
+}
 x-field {
-    display: inline;
+    display: flex;
+    flex-direction: row;
     position: relative;
+    align-items: center;
 }
-
+.preview_button {
+    -webkit-transition: 100ms;
+}
+.preview_button:active {
+    background-color: white;
+    color: black
+}
 x-field .close_span {
     vertical-align: center;
     transition: 500ms;
@@ -253,11 +282,16 @@ x-field .close_span:hover {
 #current_video_streams {
     border-radius: 10px;
     border: 1px white;
+    -webkit-box-shadow: 0 0 13px 6px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0 0 13px 6px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 13px 6px rgba(0, 0, 0, 0.2);
 }
 
 .info_link {
     display: flex;
     background-color: rgb(37, 42, 42);
+    border-top: 2px solid rgba(0, 0, 0, 0.2);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
     flex-direction: row;
     padding: 40px;
     justify-content: space-evenly;
@@ -286,12 +320,31 @@ x-field .close_span:hover {
     min-height: 150px;
     max-height: 150px;
     overflow-y: scroll;
-
     -webkit-box-shadow: 0 0 34px 0 rgba(0, 0, 0, 0.42) inset;
     -moz-box-shadow: 0 0 34px 0 rgba(0, 0, 0, 0.42) inset;
     box-shadow: 0 0 34px 0 rgba(0, 0, 0, 0.42) inset;
 }
-
+.download_button {
+    color: white;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    -webkit-transition: 100ms;
+}
+.download_button:active {
+    color: black;
+    background-color: white;
+}
+.download_link {
+    color: white;
+    -webkit-transition: 100ms;
+}
+.download_link:active {
+    color: black;
+    background-color: white;
+}
+.download_link:hover {
+    color: #ce0c46;
+}
 .download_objects_button {
     width: -webkit-fill-available;
     background-color: rgb(37, 42, 42);
@@ -305,8 +358,7 @@ x-field .close_span:hover {
 }
 
 .download_objects_button_inner {
-    margin: 5px;
-    padding: 5px;
+    padding: 10px;
 }
 
 .download_links_separator {
@@ -329,9 +381,9 @@ x-field .close_span:hover {
     justify-content: center;
     writing-mode: vertical-rl;
     transform: rotate(0deg);
-    font-size: 40px;
+    font-size: 15px;
+    letter-spacing: 5px;
     align-content: center;
-
 }
 
 .status_dot {

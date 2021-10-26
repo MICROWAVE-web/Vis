@@ -6,62 +6,16 @@
         <div class="checking_link">
             <x-field>
                 <input class='link_input' type="text" placeholder="Введите ссылку"
-                       value="https://youtu.be/h8YOaGjLJQQ">
+                       value="https://youtu.be/QAhvvQQurw4">
                 <span class="close_span">
             &times;
             </span>
             </x-field>
+            <a download="video.mp4"
+               href="https://r3---sn-jvhnu5g-v8ce.googlevideo.com/videoplayback?expire=1635272495&ei=z_J3YbjLFZb97ATSjJeQCA&ip=212.74.200.117&id=o-AJTf5qmu_96zcEU4feLW2esqpdqDu6etS8tiu1OgrAkP&itag=22&source=youtube&requiressl=yes&mh=Yw&mm=31%2C29&mn=sn-jvhnu5g-v8ce%2Csn-n8v7knes&ms=au%2Crdu&mv=m&mvi=3&pl=19&initcwndbps=1736250&vprv=1&mime=video%2Fmp4&cnr=14&ratebypass=yes&dur=2838.987&lmt=1611671328183333&mt=1635250625&fvip=9&fexp=24001373%2C24007246&c=ANDROID&txp=5535432&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cvprv%2Cmime%2Ccnr%2Cratebypass%2Cdur%2Clmt&sig=AOq0QJ8wRQIhAPNwJSs4W3ca1PRV58z_9EX6heSKGm1JgDAklhliOSqmAiAzFHkafNlDKtzX5_FPs3HBBHBMbozRwnFf5qMtaitYNQ%3D%3D&lsparams=mh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Cinitcwndbps&lsig=AG3C_xAwRAIgHc18nuSstogCFW6pV1eFX_RriRy9d9KqzaJyLFzRXl4CIGItTgmZV7XUfGXdGIFgKlBrvleoH1w0AfAryWlz83og">11111</a>
         </div>
         <div class="browse_link"></div>
         <div class="download_links">
-            <div class="download_objects_button">
-                <div class="download_objects_button_inner download_objects_button_info block_with_central_text">
-                    Классное видео
-                </div>
-                <div class="download_links_separator"></div>
-                <div class="download_objects_button_inner download_objects_button_icon">В)</div>
-                <div class="download_links_separator"></div>
-                <div class="download_objects_button_inner download_objects_button_icon pointers_block">
-                    Предпросмотр
-                </div>
-                <div class="download_links_separator"></div>
-                <div class="download_objects_button_inner download_objects_button_a pointers_block">
-                    Сохранить
-                </div>
-            </div>
-
-            <div class="download_objects_button">
-                <div class="download_objects_button_inner download_objects_button_info block_with_central_text">
-                    Классное видео
-                </div>
-                <div class="download_links_separator"></div>
-                <div class="download_objects_button_inner download_objects_button_icon">В)</div>
-                <div class="download_links_separator"></div>
-                <div class="download_objects_button_inner download_objects_button_icon pointers_block">
-                    Предпросмотр
-                </div>
-                <div class="download_links_separator"></div>
-                <div class="download_objects_button_inner download_objects_button_a pointers_block">
-                    Сохранить
-                </div>
-            </div>
-
-            <div class="download_objects_button">
-                <div class="download_objects_button_inner download_objects_button_info block_with_central_text">
-                    Классное видео
-                </div>
-                <div class="download_links_separator"></div>
-                <div class="download_objects_button_inner download_objects_button_icon">В)</div>
-                <div class="download_links_separator"></div>
-                <div class="download_objects_button_inner download_objects_button_icon pointers_block">
-                    Предпросмотр
-                </div>
-                <div class="download_links_separator"></div>
-                <div class="download_objects_button_inner download_objects_button_a pointers_block">
-                    Сохранить
-                </div>
-            </div>
-
         </div>
         <div class="info_link">
             <video id='current_video_streams' autoplay="autoplay" width="400" height="300"
@@ -107,7 +61,6 @@
 {% block js_code %}
     <script>
         $(document).ready(function (urll, title) {
-
             $('.download_links').on('click', '.preview_button', function () {
                 showPreview(all_streams.catalog[this.id]);
             })
@@ -166,11 +119,15 @@
                             bsg.hide();
                             bsg.fadeIn(500);
                             window.all_streams = {
-                              catalog: response.streams[0]
+                                catalog: response.streams[0]
                             };
                             console.log(all_streams.catalog);
                             showPreview(all_streams.catalog[response.streams[0].length - 1])
+                            $('.download_links').empty();
                             streams.forEach(function (entry, indexx) {
+                                let basic_url = new URL(entry['url'])
+                                let basic_title = 'title.mp4'
+                                //<div class="download_objects_button_inner download_objects_button_a pointers_block download_button"'><a class="download_link" href="` + {% url 'download' %} +'?exp=' + entry['subtype'] + '&link=' + entry['url'].replaceAll('&', 'mozzarella') + `">Скачать</a></div>
                                 $('.download_links').append(`
                                 <div class="download_objects_button">
                                     <div class="download_objects_button_inner download_objects_button_info block_with_central_text">Классное видео</div>
@@ -179,7 +136,7 @@
                                     <div class="download_links_separator"></div>
                                     <div class="download_objects_button_inner download_objects_button_icon pointers_block preview_button" id='` + indexx + `'>Предпросмотр</div>
                                     <div class="download_links_separator"></div>
-                                    <div class="download_objects_button_inner download_objects_button_a pointers_block"'><a class="download_link" href="` + {% url 'download' %} +'?exp=' + entry['subtype'] + '&link=' + entry['url'].replaceAll('&', 'mozzarella') + `">Скачать</a></div>
+                                    <div class="download_objects_button_inner download_objects_button_a pointers_block download_button"'><a class="download_link" download='` + basic_title + `' href="` + entry['url'] + `&host=` + basic_url.hostname + '&title=' + basic_title.replace('.mp4', '') + `">Скачать</a></div>
                                 </div>
                                 `)
 

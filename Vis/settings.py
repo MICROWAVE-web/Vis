@@ -26,7 +26,16 @@ SECRET_KEY = 'django-insecure-wr$7zdwrz2=u-a2_^xdcaw!=8131e0oua2+xicf&d7q6erh*j(
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOWED_ORIGINS = [
+    'http://0.0.0.0:8000',
+    'http://localhost:8000'
+]
+CORS_ORIGIN_WHITELIST = [
+    'http://0.0.0.0:8000',
+    'http://localhost:8000'
+    'https://r5---sn-jvhnu5g-v8cs.googlevideo.com',
+]
 
 # Application definition
 
@@ -38,11 +47,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main.apps.MainConfig',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
