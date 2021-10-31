@@ -6,7 +6,7 @@
         <div class="checking_link">
             <x-field>
                 <input class='link_input' type="text" placeholder="Введите ссылку"
-                       value="https://youtu.be/QAhvvQQurw4">
+                       value="https://youtu.be/iz-iC2RZKOg">
                 <span class="close_span">
             &times;
             </span>
@@ -77,13 +77,10 @@
 
             function formatBytes(bytes, decimals = 2) {
                 if (bytes === 0) return '0 Байт';
-
                 const k = 1024;
                 const dm = decimals < 0 ? 0 : decimals;
                 const sizes = ['Байт', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-
                 const i = Math.floor(Math.log(bytes) / Math.log(k));
-
                 return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
             }
 
@@ -128,13 +125,13 @@
                                 //<div class="download_objects_button_inner download_objects_button_a pointers_block download_button"'><a class="download_link" href="` + +'?exp=' + entry['subtype'] + '&link=' + entry['url'].replaceAll('&', 'mozzarella') + `">Скачать</a></div>
                                 $('.download_links').append(`
                                 <div class="download_objects_button">
-                                    <div class="download_objects_button_inner download_objects_button_info block_with_central_text">Классное видео</div>
+                                    <div class="download_objects_button_inner download_objects_button_info block_with_central_text">` + (indexx + 1) + '    ' + entry['type'] + ' - ' + entry['resolution'] + `</div>
                                     <div class="download_links_separator"></div>
                                     <div class="download_objects_button_inner download_objects_button_icon">В)</div>
                                     <div class="download_links_separator"></div>
                                     <div class="download_objects_button_inner download_objects_button_icon pointers_block preview_button" id='` + indexx + `'>Предпросмотр</div>
                                     <div class="download_links_separator"></div>
-                                    <div class="download_objects_button_inner download_objects_button_a pointers_block download_button"'><a class="download_link" download='` + basic_title + `' href="` + entry['url'] + `&host=` + basic_url.hostname + '&title=' + basic_title.replace('.mp4', '') + `">Скачать</a></div>
+                                    <a class="download_link" target="_blank" download='` + basic_title + `' href="` + entry['url'] + `&host=` + basic_url.hostname + '&title=' + basic_title.replace('.mp4', '') + `"><div class="download_objects_button_inner download_objects_button_a pointers_block download_button"'>Скачать</div></a>
                                 </div>
                                 `)
 

@@ -335,11 +335,12 @@ x-field .close_span:hover {
     background-color: white;
 }
 .download_link {
+    border-radius: 10px;
     color: white;
     -webkit-transition: 100ms;
 }
 .download_link:active {
-    color: black;
+    color: #ce0c46;
     background-color: white;
 }
 .download_link:hover {

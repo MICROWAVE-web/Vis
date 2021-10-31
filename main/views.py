@@ -39,9 +39,11 @@ class Youtube(Social):
             raise IncorrectLink('Не удалось обработать видео с Ютуб')
 
     def streams(self):
-        return [st.__dict__ for st in
-                self.yt.streams.filter().order_by(
-                    'resolution')]
+        output = [st.__dict__ for st in (self.yt.streams.filter(progressive=True).order_by('resolution')) if st.__dict__.get('resolution') != '144p' and str(st.__dict__.get('video_codec')).startswith('av')]
+        output += [st.__dict__ for st in (self.yt.streams.filter(resolution='1080p')) if str(st.__dict__.get('video_codec')).startswith('av')]
+        output += [st.__dict__ for st in (self.yt.streams.filter(resolution='1440p')) if str(st.__dict__.get('video_codec')).startswith('av')]
+        output += [st.__dict__ for st in (self.yt.streams.filter(resolution='2160p')) if str(st.__dict__.get('video_codec')).startswith('av')]
+        return output
 
     def audio_streams(self):
         return [st.__dict__ for st in
@@ -185,14 +187,11 @@ def waprfile(request):
     try:
         assert link, 'Не хватает входных данных (link)'
         assert exp in ['mp3', 'mp4', '3gpp'], 'Не хватает входных данных (exp)'
-        print('Получение данных...')
-        print(1)
+        print('Getting data...')
         data_request = urllib.request.urlopen(link)
-        print(2)
         file_data = data_request.read()
-        print(3)
         meta = data_request.info()
-        print('Данные получены.')
+        print('Data received.')
         if exp == 'mp4':
             response = HttpResponse(file_data, content_type='video/mp4')
         elif exp == 'mp3' or '3gpp':
